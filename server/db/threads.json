@@ -1,0 +1,53 @@
+{
+	"threads": [
+		{
+			"id": 1,
+			"title": "Thread 1",
+			"createdBy": "user 1",
+			"createdAt": "12-12-2024",
+			"totalComments": 25,
+			"upVote": 3,
+			"downVOte": 1,
+			"voted": false,
+			"post": {
+				"body": "blablablablablablab",
+				"postedBy": "user 1",
+				"postedat": "12-12-2024"
+			}
+		}
+	],
+	"comments": [
+		{
+			"commentID": 1,
+			"body": "blablablablablablab",
+			"postedBy": "user 1",
+			"postedat": "12-12-2024",
+			"replies": {},
+			"commentUpVote": 1,
+			"commentUownVOte": 5,
+			"voted": false
+		},
+		{
+			"commentID": 2,
+			"body": "reply blablablablablablab",
+			"postedBy": "user 1",
+			"postedat": "12-12-2024",
+			"replies": {
+				"commentID": 1
+			},
+			"commentUpVote": 4,
+			"commentUownVOte": 1,
+			"voted": true
+		},
+		{
+			"commentId": 3,
+			"body": "new blablablablablablab",
+			"postedBy": "user 1",
+			"postedat": "12-12-2024",
+			"replies": {},
+			"commentUpVote": 0,
+			"commentUownVOte": 0,
+			"voted": false
+		}
+	]
+}
