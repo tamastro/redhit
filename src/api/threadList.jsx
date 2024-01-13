@@ -3,7 +3,8 @@ export const getThreads = async () => {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			query: 'query getAllThread {allThreads {id title}}',
+			query:
+				'query getAllThread {allThreads {id title createdBy createdAt post totalComments}}',
 		}),
 	});
 

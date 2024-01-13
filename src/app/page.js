@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { getThreads } from '../api/threadList';
 import ThreadLists from './threads';
+import Header from './header';
 
 export default async function Home() {
 	const queryClient = new QueryClient();
@@ -16,7 +17,7 @@ export default async function Home() {
 
 	return (
 		<main>
-			<h1>REDHIT</h1>
+			<Header />
 			<HydrationBoundary state={dehydratedState}>
 				<ThreadLists />
 			</HydrationBoundary>
