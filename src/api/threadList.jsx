@@ -1,4 +1,4 @@
-export const getThread = async () => {
+export const getThreads = async () => {
 	const res = await fetch('http://localhost:3000/', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
