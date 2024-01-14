@@ -9,9 +9,12 @@ import Header from './header';
 
 export default async function Home() {
 	const queryClient = new QueryClient();
-	await queryClient.prefetchQuery({
+	await queryClient.prefetchInfiniteQuery({
 		queryKey: ['threads'],
-		queryFn: getThreads,
+		queryFn: ({ pageParam = 0 }) => {
+			const allThreadData = getThreads(pageParam);
+			return allThreadData.data.allThreads;
+		},
 	});
 	const dehydratedState = dehydrate(queryClient);
 
