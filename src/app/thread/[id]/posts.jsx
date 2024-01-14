@@ -2,50 +2,43 @@
 
 import { getPost, upVotedComment } from '@/api/post';
 import { downVoted, upVoted } from '@/api/threadList';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { find } from 'lodash';
 
 const ThreadDetails = ({ params }) => {
-	const { data } = useQuery({
-		queryKey: ['posts'],
-		queryFn: () => getPost(params.id),
+	const queryClient = useQueryClient();
+
+	const { data, refetch } = useQuery({
+		queryKey: ['threadDetails'],
+		queryFn: () => getPost(params),
 	});
 
 	const upVotedCommentAction = useMutation({
 		mutationFn: upVotedComment,
 		onSettled: () => {
-			return queryClient.invalidateQueries(['posts']);
+			return queryClient.invalidateQueries(['threadDetails']);
 		},
 	});
 
 	const upVotedAction = useMutation({
 		mutationFn: upVoted,
 		onSettled: () => {
-			return queryClient.invalidateQueries(['posts']);
+			return queryClient.invalidateQueries(['threadDetails']);
 		},
 	});
 
 	const downVotedAction = useMutation({
 		mutationFn: downVoted,
 		onSettled: () => {
-			return queryClient.invalidateQueries(['posts']);
+			return queryClient.invalidateQueries(['threadDetails']);
 		},
 	});
 	const router = useRouter();
 
-	const {
-		id,
-		title,
-		createdBy,
-		createdAt,
-		post,
-		downVote,
-		upVote,
-		voted,
-		Comments,
-	} = data.data.Thread;
+	const { id, title, post, downVote, upVote, voted, Comments } =
+		data.data.Thread;
 	return (
 		<>
 			<button
