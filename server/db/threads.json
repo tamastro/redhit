@@ -123,63 +123,59 @@
 	],
 	"comments": [
 		{
-			"commentID": 1,
-			"threadID": 1,
+			"id": 1,
+			"thread_id": 1,
 			"body": "first lablablablablablab",
 			"postedBy": "user 1",
 			"postedat": "12-12-2024",
-			"replies": {},
+			"ReplyToCommentId": null,
 			"commentUpVote": 1,
-			"commentUownVote": 5,
+			"commentDownVote": 5,
 			"voted": 0
 		},
 		{
-			"commentID": 2,
-			"threadID": 1,
+			"id": 2,
+			"thread_id": 1,
 			"body": "reply blablablablablablab",
 			"postedBy": "user 1",
 			"postedat": "12-12-2024",
-			"replies": {
-				"commentID": 1
-			},
 			"commentUpVote": 4,
-			"commentUownVote": 1,
-			"voted": true
+			"ReplyToCommentId": 1,
+			"commentDownVote": 1,
+			"voted": 0
 		},
 		{
-			"commentId": 3,
-			"threadID": 1,
+			"id": 3,
+			"thread_id": 1,
 			"body": "new blablablablablablab",
 			"postedBy": "user 1",
 			"postedat": "12-12-2024",
-			"replies": {},
+			"ReplyToCommentId": null,
 			"commentUpVote": 0,
-			"commentUownVote": 0,
+			"commentDownVote": 0,
 			"voted": 0
 		},
 		{
-			"commentID": 1,
-			"threadID": 2,
+			"id": 1,
+			"thread_id": 2,
 			"body": "first lablablablablablab",
 			"postedBy": "user 1",
 			"postedat": "12-12-2024",
-			"replies": {},
+			"ReplyToCommentId": null,
 			"commentUpVote": 1,
-			"commentUownVote": 5,
+			"commentDownVote": 5,
 			"voted": 0
 		},
 		{
-			"commentID": 2,
-			"threadID": 2,
+			"id": 2,
+			"thread_id": 2,
 			"body": "reply blablablablablablab",
 			"postedBy": "user 1",
 			"postedat": "12-12-2024",
-			"replies": {
-				"commentID": 1
-			},
+			"ReplyToCommentId": null,
 			"commentUpVote": 4,
-			"commentUownVote": 1,
-			"voted": true
+			"commentDownVote": 1,
+			"voted": 0
 		}
 	]
 }
