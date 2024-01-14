@@ -229,7 +229,7 @@ const ThreadDetails = ({ params }) => {
 													>
 														<svg
 															className={
-																voted !== 1
+																commentVoted !== 1
 																	? 'w-6 h-6 text-gray-800 dark:text-black'
 																	: 'w-6 h-6 text-gray-800 dark:text-white'
 															}
@@ -262,7 +262,7 @@ const ThreadDetails = ({ params }) => {
 													>
 														<svg
 															className={
-																voted !== 2
+																commentVoted !== 2
 																	? 'w-6 h-6 text-gray-800 dark:text-black'
 																	: 'w-6 h-6 text-gray-800 dark:text-white'
 															}
