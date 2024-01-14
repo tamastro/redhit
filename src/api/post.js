@@ -99,3 +99,19 @@ export const downVotedComment = async ({
 
 	return res.json();
 };
+
+export const addComment = async ({ id, input }) => {
+	const res = await fetch('http://localhost:3000/', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			query: `mutation {createComment (thread_id: ${id} body: "${input}" postedBy: "me" postedat: "${new Date().toString()}" commentUpVote: 0 commentDownVote: 0 voted: 0) {id}}`,
+		}),
+	});
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	return res.json();
+};

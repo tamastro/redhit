@@ -1,14 +1,21 @@
 'use client';
 
-import { downVotedComment, getPost, upVotedComment } from '@/api/post';
+import {
+	addComment,
+	downVotedComment,
+	getPost,
+	upVotedComment,
+} from '@/api/post';
 import { downVoted, upVoted } from '@/api/threadList';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { find } from 'lodash';
 
 const ThreadDetails = ({ params }) => {
 	const queryClient = useQueryClient();
+
+	const [input, setInput] = useState('');
 
 	const { data, refetch } = useQuery({
 		queryKey: ['threadDetails'],
@@ -39,6 +46,14 @@ const ThreadDetails = ({ params }) => {
 	const downVotedAction = useMutation({
 		mutationFn: downVoted,
 		onSettled: () => {
+			return queryClient.invalidateQueries(['threadDetails']);
+		},
+	});
+
+	const commentSubmitAction = useMutation({
+		mutationFn: addComment,
+		onSettled: () => {
+			setInput('');
 			return queryClient.invalidateQueries(['threadDetails']);
 		},
 	});
@@ -160,9 +175,12 @@ const ThreadDetails = ({ params }) => {
 							rows='4'
 							class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
 							placeholder='Write your thoughts here...'
+							value={input}
+							onChange={(e) => setInput(e.target.value)}
 						></textarea>
 						<button
 							type='button'
+							onClick={() => commentSubmitAction.mutate({ id, input })}
 							class='px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 						>
 							Comment
