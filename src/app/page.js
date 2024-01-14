@@ -12,7 +12,7 @@ export default async function Home() {
 	await queryClient.prefetchInfiniteQuery({
 		queryKey: ['threads'],
 		queryFn: ({ pageParam = 0 }) => {
-			const allThreadData = getThreads(pageParam);
+			const allThreadData = getThreads(pageParam, '');
 			return allThreadData.data.allThreads;
 		},
 	});

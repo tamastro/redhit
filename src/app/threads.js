@@ -6,15 +6,21 @@ import {
 	useMutation,
 	useQueryClient,
 } from '@tanstack/react-query';
+import Card from './card';
+import Classic from './classic';
+import Compact from './compact';
+import { useState } from 'react';
 
 export default function ThreadLists() {
 	const queryClient = useQueryClient();
+	const [viewStyle, setViewStyle] = useState('card');
+	const [sortThread, setSortThread] = useState('');
 
 	const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
 		useInfiniteQuery({
-			queryKey: ['threads'],
+			queryKey: ['threads', sortThread],
 			queryFn: async ({ pageParam = 0 }) => {
-				const allThreadData = await getThreads(pageParam);
+				const allThreadData = await getThreads(pageParam, sortThread);
 				return allThreadData.data.allThreads;
 			},
 			getNextPageParam: (lastPage, allPages) =>
@@ -22,19 +28,27 @@ export default function ThreadLists() {
 			initialPageParam: 0,
 		});
 
-	const upVotedAction = useMutation({
+	const upVotedMutation = useMutation({
 		mutationFn: upVoted,
 		onSettled: () => {
 			return queryClient.invalidateQueries(['threads']);
 		},
 	});
 
-	const downVotedAction = useMutation({
+	const downVotedMutation = useMutation({
 		mutationFn: downVoted,
 		onSettled: () => {
 			return queryClient.invalidateQueries(['threads']);
 		},
 	});
+
+	const upvotedAction = (payload) => {
+		upVotedMutation.mutate(payload);
+	};
+
+	const downvotedAction = (payload) => {
+		downVotedMutation.mutate(payload);
+	};
 
 	return (
 		<>
@@ -53,32 +67,40 @@ export default function ThreadLists() {
 							role='tab'
 							aria-controls='about'
 							aria-selected='true'
-							className='inline-block p-4 text-blue-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500'
+							className='inline-block p-4 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 '
+							onClick={() => {
+								setSortThread('totalComments');
+								return queryClient.invalidateQueries(['threads']);
+							}}
 						>
 							HOT
 						</button>
 					</li>
 					<li className='me-2'>
 						<button
-							id='services-tab'
-							data-tabs-target='#services'
 							type='button'
 							role='tab'
 							aria-controls='services'
 							aria-selected='false'
 							className='inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300'
+							onClick={() => {
+								setSortThread('upVote');
+								return queryClient.invalidateQueries(['threads']);
+							}}
 						>
 							TOP
 						</button>
 					</li>
 					<li className='me-2'>
 						<button
-							id='statistics-tab'
-							data-tabs-target='#statistics'
 							type='button'
 							role='tab'
 							aria-controls='statistics'
 							aria-selected='false'
+							onClick={() => {
+								setSortThread('id');
+								return queryClient.invalidateQueries(['threads']);
+							}}
 							className='inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300'
 						>
 							NEW
@@ -88,6 +110,7 @@ export default function ThreadLists() {
 				<select
 					name={'viewFilter'}
 					id={'viewFilter'}
+					onChange={(e) => setViewStyle(e.target.value)}
 					className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
 				>
 					<option value='card'>Card</option>
@@ -108,106 +131,61 @@ export default function ThreadLists() {
 						voted,
 						upVote,
 						downVote,
-					}) => {
-						return (
-							<div className='max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
-								<p className='text-xs text-gray-900 dark:text-white'>
-									Thread by {createdBy} - {createdAt}
-								</p>
-								<a href={`/thread/${id}`}>
-									<h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
-										{title}
-									</h5>
-								</a>
-								<p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>
-									{post.body}
-								</p>
-								<a
-									href='#'
-									className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-								>
-									Read more
-									<svg
-										className='rtl:rotate-180 w-3.5 h-3.5 ms-2'
-										aria-hidden='true'
-										xmlns='http://www.w3.org/2000/svg'
-										fill='none'
-										viewBox='0 0 14 10'
-									>
-										<path
-											stroke='currentColor'
-											stroke-linecap='round'
-											stroke-linejoin='round'
-											stroke-width='2'
-											d='M1 5h12m0 0L9 1m4 4L9 9'
-										/>
-									</svg>
-								</a>
-								<button
-									type='button'
-									className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-									onClick={() =>
-										upVotedAction.mutate({ id, upVote, downVote, voted })
-									}
-								>
-									<svg
-										className={
-											voted !== 1
-												? 'w-6 h-6 text-gray-800 dark:text-black'
-												: 'w-6 h-6 text-gray-800 dark:text-white'
-										}
-										aria-hidden='true'
-										xmlns='http://www.w3.org/2000/svg'
-										fill='none'
-										viewBox='0 0 10 14'
-									>
-										<path
-											stroke='currentColor'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth='2'
-											d='M5 13V1m0 0L1 5m4-4 4 4'
-										/>
-									</svg>
-
-									<span className='sr-only'>Icon description</span>
-								</button>
-								{upVote - downVote}
-								<button
-									type='button'
-									className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-									onClick={() =>
-										downVotedAction.mutate({ id, upVote, downVote, voted })
-									}
-								>
-									<svg
-										className={
-											voted !== 2
-												? 'w-6 h-6 text-gray-800 dark:text-black'
-												: 'w-6 h-6 text-gray-800 dark:text-white'
-										}
-										aria-hidden='true'
-										xmlns='http://www.w3.org/2000/svg'
-										fill='none'
-										viewBox='0 0 10 14'
-									>
-										<path
-											stroke='currentColor'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth='2'
-											d='M5 1v12m0 0 4-4m-4 4L1 9'
-										/>
-									</svg>
-									<span className='sr-only'>Icon description</span>
-								</button>
-								<p className='text-xs font-black text-gray-900 dark:text-white'>
-									{totalComments} comments
-								</p>
-							</div>
-						);
+					} = threadData) => {
+						switch (viewStyle) {
+							case 'card':
+								return (
+									<Card
+										id={id}
+										title={title}
+										createdBy={createdBy}
+										createdAt={createdAt}
+										post={post}
+										totalComments={totalComments}
+										voted={voted}
+										upVote={upVote}
+										downVote={downVote}
+										upvotedAction={upvotedAction}
+										downvotedAction={downvotedAction}
+									/>
+								);
+								break;
+							case 'classic':
+								return (
+									<Classic
+										id={id}
+										title={title}
+										createdBy={createdBy}
+										createdAt={createdAt}
+										post={post}
+										totalComments={totalComments}
+										voted={voted}
+										upVote={upVote}
+										downVote={downVote}
+										upvotedAction={upvotedAction}
+										downvotedAction={downvotedAction}
+									/>
+								);
+								break;
+							case 'compact':
+								return (
+									<Compact
+										id={id}
+										title={title}
+										createdBy={createdBy}
+										createdAt={createdAt}
+										post={post}
+										totalComments={totalComments}
+										voted={voted}
+										upVote={upVote}
+										downVote={downVote}
+										upvotedAction={upvotedAction}
+										downvotedAction={downvotedAction}
+									/>
+								);
+								break;
+						}
 					},
-					length,
 				)}
 			<button
 				onClick={() => fetchNextPage()}

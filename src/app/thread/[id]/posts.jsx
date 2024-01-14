@@ -1,6 +1,6 @@
 'use client';
 
-import { getPost, upVotedComment } from '@/api/post';
+import { downVotedComment, getPost, upVotedComment } from '@/api/post';
 import { downVoted, upVoted } from '@/api/threadList';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -17,6 +17,13 @@ const ThreadDetails = ({ params }) => {
 
 	const upVotedCommentAction = useMutation({
 		mutationFn: upVotedComment,
+		onSettled: () => {
+			return queryClient.invalidateQueries(['threadDetails']);
+		},
+	});
+
+	const downVotedCommentAction = useMutation({
+		mutationFn: downVotedComment,
 		onSettled: () => {
 			return queryClient.invalidateQueries(['threadDetails']);
 		},
@@ -213,7 +220,7 @@ const ThreadDetails = ({ params }) => {
 														className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 														onClick={() =>
 															upVotedCommentAction.mutate({
-																id,
+																comment_id,
 																commentUpVote,
 																commentDownVote,
 																commentVoted,
@@ -244,6 +251,14 @@ const ThreadDetails = ({ params }) => {
 													<button
 														type='button'
 														className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+														onClick={() =>
+															downVotedCommentAction.mutate({
+																comment_id,
+																commentUpVote,
+																commentDownVote,
+																commentVoted,
+															})
+														}
 													>
 														<svg
 															className={

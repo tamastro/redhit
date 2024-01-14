@@ -1,9 +1,16 @@
-export const getThreads = async (page) => {
+export const getThreads = async (page, sort) => {
+	console.log('====================================');
+	console.log('dalem', sort);
+	console.log('====================================');
 	const res = await fetch('http://localhost:3000/', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			query: `query getAllThread {allThreads(perPage: 2 page: ${page}) {id title createdBy createdAt post totalComments voted upVote downVote}}`,
+			query: `query getAllThread {allThreads(perPage: 2 page: ${page} sortField: "${
+				sort ? sort : 'id'
+			}" sortOrder: "${
+				sort ? 'desc' : 'asc'
+			}") {id title createdBy createdAt post totalComments voted upVote downVote}}`,
 		}),
 	});
 

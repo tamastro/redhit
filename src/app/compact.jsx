@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { downVoted, upVoted } from '../api/threadList';
 import { Suspense } from 'react';
 
-const Card = ({
+const Compact = ({
 	id,
 	title,
 	createdBy,
@@ -17,7 +17,7 @@ const Card = ({
 }) => {
 	return (
 		<Suspense fallback='loading'>
-			<div className='max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
+			<div className='flex items-center gap-7 max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
 				<p className='text-xs text-gray-900 dark:text-white'>
 					Thread by {createdBy} - {createdAt}
 				</p>
@@ -91,4 +91,4 @@ const Card = ({
 	);
 };
 
-export default Card;
+export default Compact;
