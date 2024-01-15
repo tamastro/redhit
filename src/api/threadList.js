@@ -1,7 +1,4 @@
 export const getThreads = async (page, sort) => {
-	console.log('====================================');
-	console.log('dalem', sort);
-	console.log('====================================');
 	const res = await fetch('http://localhost:3000/', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
